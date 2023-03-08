@@ -1,6 +1,6 @@
 ---
 title: "WindmillEfficiency"
-author: "Charlie Wilson"
+author: "Charlie Wilson, Russell Fager, Tommy King"
 date: "3/8/2023"
 output: html_document
 ---
