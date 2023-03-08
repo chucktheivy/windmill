@@ -9,18 +9,12 @@ output: html_document
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-Wind Power is given by the equation: 
-
-P= 0.5 x ρ x A x Cp x V3 x Ng x Nb 
- 
-
-
-
-A = Rotor swept area (m2). 
-Cp = Coefficient of performance 
-
-V = wind velocity (m/s) 
-
-Ng = generator efficiency 
-
-Nb = gear box bearing efficiency
+ The equation for wind power(P) is given by P= 0.5 x ρ x A
+x Cp x V3 x Ng x Nb where, ρ = Air density in kg/m3
+, A =
+Rotor swept area (m2
+).
+Cp = Coefficient of performance
+V = wind velocity (m/s)
+Ng = generator efficiency
+Nb = gear box bearing efficiency.
