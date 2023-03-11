@@ -5,8 +5,9 @@
 #' @param V is wind velocity m/s
 #' @param Ng is generator efficiency
 #' @param Nb is gearbox efficiency
-#' @param price is $ per kWh
 
-windmill_power = function(p, A, Cp, V, Ng, Nb, price) {
-  
+windmill_power = function(p = 1.2, A, Cp = 0.35, V, Ng, Nb = 0.5) {
+  #calculate 
+  wind_power = p*A*Cp*V*Ng*Nb
+  return(wind_power)
 }

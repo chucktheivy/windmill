@@ -7,14 +7,65 @@ output: html_document
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+library(purrr)
+library(ggpubr)
 ```
 
- The equation for wind power(P) is given by P= 0.5 x ρ x A
-x Cp x V3 x Ng x Nb where, ρ = Air density in kg/m3
-, A =
-Rotor swept area (m2
-).
-Cp = Coefficient of performance
-V = wind velocity (m/s)
-Ng = generator efficiency
-Nb = gear box bearing efficiency.
+Using windmill_power function, compute windmill power output for 4 different scenarios assuming baseline windspeed of 50 m/s:
+* Windmill A  swept area 25m^2, generator efficiency 0.2
+
+* Windmill B swept area 50m^2, generator efficiency 0.3
+
+* Windmill C swept area 75m^2, generator efficiency 0.4
+
+* Windmill D swept area 100m^2, generator efficiency 0.5
+
+Mean wind velocity = 25 m/s 
+
+```{r}
+# generate a structure to store info on our possible wind outputs
+possible_turbines = data.frame(name = c("A","B","C", "D"),swept_area=c(25,50,75,100), generator_eff = c(0.2,0.3,0.4,0.5))
+
+speed_base = 25
+# estimate power for each scenario
+# add to the data structure
+possible_turbines$power = windmill_power(V=speed_base, Ng=power_output$generator_eff, A = power_output$swept_area)
+head(power_output)
+# show results                         
+ggplot(possible_turbines, aes(x=swept_area, y=power, fill=as.factor(swept_area)))+geom_col()+labs(y="Power (Watts)", x="Swept Area (m2)", fill="Swept Area (m2)")
+power_output
+
+```
+
+```{r withforloop}
+#using for loop
+# the first part, generating speeds is the same as above
+possible_turbines
+# use sample to generate a distribution of wind velocities 
+# assume a log normal distribution of wind speeds with mean 25 m/s
+# assume standard deviation of 5%
+nsample = 100
+mean_speed = log(25)
+speeds = rlnorm(mean=mean_speed, sd=0.05*mean_speed, nsample)
+summary(speeds)
+plot(density(speeds), ylab="Distribution of Speeds in (m/s)")
+
+# use a for loop to cycle through each scenario
+# create a data frame to store results 
+# one column for each turbine and one row for each speed
+powerall1 = as.data.frame(matrix(nrow=length(speeds), ncol=nrow(possible_turbines)))
+for (i in 1:nrow(possible_turbines)) {
+  powerall1[,i] = windmill_power(A=possible_turbines$swept_area[i], Ng=possible_turbines$generator_eff[i], V=speeds)
+}
+# add column names
+colnames(powerall1)=possible_turbines$name
+# for plotting turn columns in to rows
+powerallr1 = powerall1 %>% pivot_longer(cols=everything(), names_to="turbine", values_to="power")
+head(powerallr1)
+# quick visualization
+method1_plot = ggplot(powerallr1, aes(turbine,power, fill=turbine))+geom_boxplot()+ggtitle("For Loop")
+
+
+```
+
