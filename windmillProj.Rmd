@@ -11,6 +11,7 @@ library(tidyverse)
 library(purrr)
 library(ggpubr)
 ```
+Test function to see if it works:
 
 Using windmill_power function, compute windmill power output for 4 different scenarios assuming baseline windspeed of 50 m/s:
 * Windmill A  swept area 25m^2, generator efficiency 0.2
@@ -30,17 +31,16 @@ possible_turbines = data.frame(name = c("A","B","C", "D"),swept_area=c(25,50,75,
 speed_base = 25
 # estimate power for each scenario
 # add to the data structure
-possible_turbines$power = windmill_power(V=speed_base, Ng=power_output$generator_eff, A = power_output$swept_area)
-head(power_output)
+possible_turbines$power = windmill_power(V=speed_base, Ng=possible_turbines$generator_eff, A = possible_turbines$swept_area)
+head(possible_turbines)
 # show results                         
 ggplot(possible_turbines, aes(x=swept_area, y=power, fill=as.factor(swept_area)))+geom_col()+labs(y="Power (Watts)", x="Swept Area (m2)", fill="Swept Area (m2)")
-power_output
+possible_turbines
 
 ```
 
 ```{r withforloop}
 #using for loop
-# the first part, generating speeds is the same as above
 possible_turbines
 # use sample to generate a distribution of wind velocities 
 # assume a log normal distribution of wind speeds with mean 25 m/s
