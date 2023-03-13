@@ -6,8 +6,9 @@
 #' @param Ng is generator efficiency
 #' @param Nb is gearbox efficiency
 
-windmill_power = function(p = 1.2, A, Cp = 0.35, V, Ng, Nb = 0.5) {
+windmill_power = function(p = 1.2, A, Cp = 0.35, V, Ng, Nb = 0.5, price = .10) {
   #calculate 
   wind_power = p*A*Cp*V*Ng*Nb
-  return(wind_power)
+  price = wind_power * price
+  return(list(windPower = wind_power, pricePerkWh = price))
 }
