@@ -24,27 +24,12 @@ Using windmill_power function, compute windmill power output for 4 different sce
 
 Mean wind velocity = 25 m/s 
 
-```{r}
-source("R/windmill_power.R")
-# generate a structure to store info on our possible wind outputs
-possible_turbines = data.frame(name = c("A","B","C", "D"),swept_area=c(25,50,75,100), generator_eff = c(0.2,0.3,0.4,0.5))
 
-speed_base = 25
-# estimate power for each scenario
-# add to the data structure
-possible_turbines$power = windmill_power(V=speed_base, Ng=possible_turbines$generator_eff, A = possible_turbines$swept_area)
-#head(possible_turbines)
-# show results                         
-ggplot(possible_turbines, aes(x=swept_area, y=power, fill=as.factor(swept_area)))+geom_col()+labs(y="Power (Watts)", x="Swept Area (m2)", fill="Swept Area (m2)")
-possible_turbines
-
-```
 ```{r}
 source("R/windmill_power.R")
 
 #We created a windmill power function with several inputs and parameters the generates two outputs wind power in kWh and revenue from wind power based on current market price (12 cents)
 
-windmill_power(A= 25, V = 40, Ng = .3)
 ```
 
 
