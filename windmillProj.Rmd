@@ -66,17 +66,66 @@ plot(density(sweptareas), ylab="Distribution of swept areas in (m^2)")
 wind_speeds = data.frame(name = c("20mps","15mps","10mps","5mps"),V=c(20,15,10,5))
 
 
-allSweptAreas = data.frame(matrix(nrow=length(sweptareas),ncol = length(wind_speeds$name)))
+allSweptAreaspower = data.frame(matrix(nrow=length(sweptareas),ncol = length(wind_speeds$name)))
 
 
 # Create power outputs using nested for loop
 for(i in 1:length(wind_speeds$V)){
   for(j in 1:nsample){
-    allSweptAreas[j,i]=windmill_power(V = wind_speeds$V[i],A = sweptareas[j], hidePower = FALSE, hidePrice = TRUE)
+    allSweptAreaspower[j,i]=windmill_power(V = wind_speeds$V[i],A = sweptareas[j], hidePower = FALSE, hidePrice = TRUE)
   }
 }
 
-colnames(allSweptAreas) = wind_speeds$name
+colnames(allSweptAreaspower) = wind_speeds$name
 
+#make usable for boxplot
+allSweptAreaspower2 = allSweptAreaspower %>% pivot_longer(cols=everything(), names_to="WindSpeed", values_to="Power")
+
+#Create data frame for revenue
+allSweptAreasprice = data.frame(matrix(nrow=length(sweptareas),ncol = length(wind_speeds$name)))
+
+
+
+# Create power outputs using nested for loop
+for(i in 1:length(wind_speeds$V)){
+  for(j in 1:nsample){
+    allSweptAreasprice[j,i]=windmill_power(V = wind_speeds$V[i],A = sweptareas[j], hidePower = TRUE, hidePrice = FALSE)
+  }
+}
+
+colnames(allSweptAreasprice) = wind_speeds$name
+
+allSweptAreasprice2 = allSweptAreasprice %>% pivot_longer(cols=everything(), names_to="WindSpeed", values_to="Price")
+
+
+sweepAreaPurpower = pmap(list(V = wind_speeds$V), windmill_power, A=sweptareas, hidePower = FALSE, hidePrice = TRUE)
+
+# covert to usible data frame for boxplot
+sweepAreaPurpower = as.data.frame(sweepAreaPurpower, col.names=wind_speeds$name)
+
+# assign x and y values to dataframe to help create a boxplot
+sweepAreaPurpower2 = sweepAreaPurpower %>% pivot_longer(cols=everything(), names_to="WindSpeed", values_to="power")
+
+#Pur method for Price
+sweepAreaPurPrice = pmap(list(V = wind_speeds$V), windmill_power, A=sweptareas, hidePower = TRUE, hidePrice = FALSE)
+
+# covert to usible data frame for boxplot
+sweepAreaPurPrice = as.data.frame(sweepAreaPurPrice, col.names=wind_speeds$name)
+
+# assign x and y values to dataframe to help create a boxplot
+sweepAreaPurPrice2 = sweepAreaPurPrice %>% pivot_longer(cols=everything(), names_to="WindSpeed", values_to="price")
+
+```
+
+
+# Boxplots
+
+```{r}
+
+#boxplot for power
+ggplot(allSweptAreaspower2, aes(WindSpeed,Power,fill=WindSpeed))+geom_boxplot()+ggtitle("Windmill Power Output") + labs( y = "Power (kWh)")
+
+#Boxplot for price
+ggplot(allSweptAreasprice2, aes(WindSpeed,Price,fill=WindSpeed))+geom_boxplot()+ggtitle("Windmill Revenue") + labs( y = "$ per second")
 ```
 
