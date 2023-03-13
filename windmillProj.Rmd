@@ -11,18 +11,7 @@ library(tidyverse)
 library(purrr)
 library(ggpubr)
 ```
-Test function to see if it works:
 
-Using windmill_power function, compute windmill power output for 4 different scenarios assuming baseline windspeed of 50 m/s:
-* Windmill A  swept area 25m^2, generator efficiency 0.2
-
-* Windmill B swept area 50m^2, generator efficiency 0.3
-
-* Windmill C swept area 75m^2, generator efficiency 0.4
-
-* Windmill D swept area 100m^2, generator efficiency 0.5
-
-Mean wind velocity = 25 m/s 
 
 
 ```{r}
